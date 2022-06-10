@@ -1,0 +1,26 @@
+{
+  "name": "codered-discordbot",
+  "version": "1.0.0",
+  "description": "CodeRED's Discord bot",
+  "main": "index.js",
+  "repository": "https://github.com/CodeRED-UH/CodeRED-DiscordBot.git",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.5.0",
+    "discord-api-types": "^0.33.5",
+    "discord.js": "^13.8.0",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.41",
+    "ts-node": "^10.8.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.7.3"
+  }
+}
