@@ -1,5 +1,5 @@
 import { Command } from "../interfaces/Command";
 import { help } from "../commands/help";
-// import { report } from "../commands/report";
+import { report } from "../commands/report";
 
-export const CommandList: Command[] = [help];
+export const CommandList: Command[] = [help, report];
