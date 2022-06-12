@@ -1,9 +1,9 @@
 import { REST } from "@discordjs/rest";
-import { Client } from "discord.js";
+import { Client, PresenceStatusData } from "discord.js";
 import { Routes } from "discord-api-types/v10";
 import { CommandList } from "../utils/_Commandlists";
-const config = require("../config/config.json");
-require("dotenv").config();
+import config from "../config/config.json";
+import "dotenv/config";
 
 export const onReady = async (client: Client) => {
   const rest = new REST({ version: "10" }).setToken(
@@ -30,7 +30,7 @@ export const onReady = async (client: Client) => {
         name: config.activityMessage,
       },
     ],
-    status: config.status,
+    status: config.status as PresenceStatusData,
   });
   console.log(
     `🗣️  Activity set to ${config.activityType} "${config.activityMessage}" with status ${config.status}`
