@@ -8,7 +8,11 @@
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
     "build": "tsc --build",
-    "clean": "tsc --build --clean"
+    "clean": "tsc --build --clean",
+    "lint": "eslint --ext .ts src/",
+    "lint:fix": "eslint --ext .ts --fix src/",
+    "prettier": "prettier --check src/**/*.ts",
+    "prettier:fix": "prettier --write src/**/*.ts"
   },
   "dependencies": {
     "@discordjs/builders": "^0.15.0",
