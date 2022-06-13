@@ -1,8 +1,8 @@
-import { Client, Intents } from "discord.js";
+import { Client } from "discord.js";
 import { onReady } from "./events/ready";
 import { onInteraction } from "./events/interaction";
 import { IntentOptions } from "./config/intentOptions";
-require("dotenv").config();
+import "dotenv/config";
 
 (async () => {
   // if (!validateEnv()) return;
