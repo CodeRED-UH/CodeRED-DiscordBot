@@ -57,7 +57,7 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
 # Contributing 🧩
 
 - #### Ideas
-  - We want everyone to be able to help us in any way they can! Every idea is welcome, please [open an issue](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues/new/choose) describing what you have in mind first. We'll discuss your idea and we may add it to the bot! Feel free to also leave your thoughts on current [ideas](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues).
+  - We want everyone to be able to help us in any way they can! Every idea is welcome, please [open an issue](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues/new?assignees=&labels=enhancement&template=feature-request--.md&title=) describing what you have in mind first. We'll discuss your idea and we may add it to the bot! Feel free to also leave your thoughts on current [ideas](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement).
 - #### Bugs
-  - Found a bug? Please let us know! Don't hesitate to [write a bug report](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues/new/choose) with as much information as possible!
-  - Are you the exterminator type? Feel free to check out an existing [bug report](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues) and see if you can find anything new and tell us what you've found.
+  - Found a bug? Please let us know! Don't hesitate to [write a bug report](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues/new?assignees=&labels=bug&template=bug-report---.md&title=) with as much information as possible!
+  - Are you the exterminator type? Feel free to check out an existing [bug report](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues?q=is%3Aissue+is%3Aopen+label%3A%22type%3A+bug%22+) and see if you can find anything new and tell us what you've found.
