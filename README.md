@@ -20,9 +20,9 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
      - Developer mode must be enabled in your Discord Client to obtain your Guild and Client IDs.
      - Contents of the `.env` file:
   ```
-  TOKEN = "<Discord_Bot_Token>"
-  GUILD_ID = "<Guild_ID>"
-  CLIENT_ID = "<Owner_ID>"
+  TOKEN = <Discord_Bot_Token>
+  GUILD_ID = <Guild_ID>
+  CLIENT_ID = <Owner_ID>
   ```
   3. You're good to go!
 - #### Build Scripts
