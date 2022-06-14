@@ -16,7 +16,7 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
 - #### Installation
   1. `Yarn` to install packages
   2. Create an `.env` in the root (./) directory
-     - You must have a [Discord Developer] (https://discord.com/developers) account setup to obtain a bot token.
+     - You must have a [Discord Developer](https://discord.com/developers) account setup to obtain a bot token.
      - Developer mode must be enabled in your Discord Client to obtain your Guild and Client IDs.
      - Contents of the `.env` file:
   ```
@@ -50,7 +50,7 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
 # Deployment 🚀
 
 - To deploy you'll first need to run `Yarn build` which builds the .JS files in ./dist
-- Secondly you'll need to navigate into ./dist and run `node index.js`
+- Secondly you'll need to navigate into `./dist` and run `node index.js`
 
 <hr/>
 
