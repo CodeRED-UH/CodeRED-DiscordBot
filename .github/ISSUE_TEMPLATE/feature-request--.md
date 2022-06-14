@@ -20,4 +20,4 @@ assignees: ''
 <!--If applicable, add screenshots to help explain your feature.-->
 
 **Additional context 🗒️**
-<!--Add any other context or screenshots about the feature request here.-->
+<!--Add any other context about the feature request here.-->
