@@ -1,20 +1,43 @@
 version: '2.1'
 orbs:
   node: circleci/node@5.0.2
-jobs:
-  build:
-    docker:
-      - image: 'cimg/base:stable'
-    steps:
-      - checkout
-      - node/install:
-          install-yarn: true
-          node-version: '16.13'
-      - run: yarn
-      - run: 
-          command: yarn build
-          name: Run yarn build
+# jobs:
+#   build:
+#     docker:
+#       - image: 'cimg/base:stable'
+#     steps:
+#       - checkout
+#       - node/install:
+#           install-yarn: true
+#           node-version: '16.13'
+#       - run: yarn
+#       - run: 
+#           command: yarn build
+#           name: Run yarn build
+#   lint:
+#     build:
+#     docker:
+#       - image: 'cimg/base:stable'
+#     steps:
+#       - checkout
+#       - node/install:
+#           install-yarn: true
+#           node-version: '16.13'
+#       - run: yarn
+#       - run: 
+#           command: yarn build
+#           name: Run yarn build
+          
 workflows:
   build:
     jobs:
-      - build
+      - node/run:
+          yarn-run: build
+  lint:
+    jobs:
+      - node/run:
+          yarn-run: lint
+  prettier:
+    jobs:
+      - node/run:
+          yarn-run: prettier     
