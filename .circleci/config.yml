@@ -10,7 +10,7 @@ jobs:
       - node/install:
           install-yarn: true
           node-version: '16.13'
-      - run: node --version
+      - run: yarn
       - run: 
           command: yarn build
           name: Run yarn build
@@ -18,7 +18,3 @@ workflows:
   install-node:
     jobs:
       - install-node
-  build:
-    jobs:
-      - node/run:
-          yarn-run: build
