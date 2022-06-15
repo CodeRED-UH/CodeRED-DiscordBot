@@ -30,6 +30,10 @@ export const help: Command = {
         "Stats 📊",
         "To view the current statistics of the bot use `/stats`.\nOnly available to the bot's owner."
       )
+      .addField)
+        "Purge",
+        "To clear messages use `/purge.\nOnly available to officers.`"
+      )  
       .setTimestamp()
       .setFooter({
         text: `${client.user?.tag}`,
