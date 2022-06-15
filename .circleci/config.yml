@@ -5,7 +5,7 @@ executors:
   node-executor:
     docker:
       - image: cimg/node:18.3.0
-    resource_class: medium
+    resource_class: small
     
 jobs:
   build:
