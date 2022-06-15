@@ -12,17 +12,23 @@ jobs:
     steps:
       - checkout
       - run: |
+          yarn
+      - run: |
           yarn build
   lint:
     executor: node-executor
     steps:
       - checkout
       - run: |
+          yarn
+      - run: |
           yarn lint
   prettier:
     executor: node-executor
     steps:
       - checkout
+      - run: |
+          yarn
       - run: |
           yarn prettier
           
