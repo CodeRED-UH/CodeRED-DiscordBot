@@ -2,7 +2,7 @@ version: '2.1'
 orbs:
   node: circleci/node@5.0.2
 jobs:
-  install-node:
+  build:
     docker:
       - image: 'cimg/base:stable'
     steps:
@@ -15,6 +15,6 @@ jobs:
           command: yarn build
           name: Run yarn build
 workflows:
-  install-node:
+  build:
     jobs:
-      - install-node
+      - build
