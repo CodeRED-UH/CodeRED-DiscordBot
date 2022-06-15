@@ -10,6 +10,13 @@ export const help: Command = {
     await interaction.deferReply();
 
     const description = `${client.user?.tag} is CodeRED's official Discord bot!`;
+    let iconURL: string | null | undefined;
+
+    if (client.user?.avatarURL({ format: "png" }) === null) {
+      iconURL = "https://avatars.githubusercontent.com/u/107168679?s=200&v=4";
+    } else {
+      iconURL = client.user?.avatarURL({ format: "png" });
+    }
 
     const helpEmbed = new MessageEmbed()
       .setColor("#ffeded")
@@ -26,8 +33,9 @@ export const help: Command = {
       .setTimestamp()
       .setFooter({
         text: `${client.user?.tag}`,
-        iconURL: `${client.user?.avatarURL({ format: "png" })}`,
+        iconURL: iconURL as string,
       });
+
     await interaction.editReply({ embeds: [helpEmbed] });
     return;
   },
