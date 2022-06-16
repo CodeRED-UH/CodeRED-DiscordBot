@@ -31,12 +31,12 @@ export const help: Command = {
       )
       .addField(
         "Stats 📊",
-        "To view the current statistics of the bot use `/stats`.\nOnly available to the bot's owner."
+        "To view the current statistics of the bot use `/stats`.`\nOnly available to the bot's owner.`"
       )
-      .addField)
+      .addField(
         "Purge",
         "To clear messages use `/purge.\nOnly available to officers.`"
-      )  
+      )
       .setTimestamp()
       .setFooter({
         text: `${client.user?.tag}`,
