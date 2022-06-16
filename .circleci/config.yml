@@ -1,0 +1,45 @@
+version: '2.1'
+orbs:
+  node: circleci/node@5.0.2
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:18.3.0
+    resource_class: small
+    
+jobs:
+  build:
+    executor: node-executor
+    steps:
+      - checkout
+      - run: |
+          yarn
+      - run: |
+          yarn build
+  lint:
+    executor: node-executor
+    steps:
+      - checkout
+      - run: |
+          yarn
+      - run: |
+          yarn lint
+  prettier:
+    executor: node-executor
+    steps:
+      - checkout
+      - run: |
+          yarn
+      - run: |
+          yarn prettier
+          
+workflows:
+  build:
+    jobs:
+      - build
+  lint:
+    jobs:
+      - lint
+  prettier:
+    jobs:
+      - prettier
