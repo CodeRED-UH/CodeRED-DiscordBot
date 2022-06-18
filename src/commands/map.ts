@@ -56,8 +56,9 @@ export const map: Command = {
       }
       default: {
         mapEmbed = new MessageEmbed()
-          .setColor("#ffeded")
-          .setTitle("Option not found")
+          .setColor("#FF0000")
+          .setTitle("❌ Option not found")
+          .setDescription("That option doesn't seem to exist.")
           .setTimestamp()
           .setFooter({
             text: `${client.user?.tag}`,
