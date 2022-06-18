@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Command } from "../interfaces/Command";
-import { createEmbeded } from "../utils/embeded";
+import { success } from "../utils/embeded";
 
 export const report: Command = {
   data: new SlashCommandBuilder()
@@ -14,17 +14,12 @@ export const report: Command = {
     ),
   run: async (interaction, client) => {
     await interaction.deferReply({ ephemeral: true });
-    const { user } = interaction;
+    // const { user } = interaction;
     const report = interaction.options.getString("report", true);
 
     const description = `Your report with the contents\n"${report}"\nhas been successfully submitted`;
 
-    const returnMessage = createEmbeded(
-      "**Report 📞**",
-      description,
-      user,
-      client
-    );
+    const returnMessage = success("**Report 📞**", description, client);
 
     await interaction.editReply({ embeds: [returnMessage] });
     return;

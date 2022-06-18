@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { MessageEmbed } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { createEmbeded } from "../utils/embeded";
+import { success, error } from "../utils/embeded";
 
 const isInRange = (
   n: number,
@@ -27,7 +28,11 @@ export const purge: Command = {
     const n = interaction.options.getNumber("n", true);
 
     if (channel?.type === "DM" || !interaction.guild) {
-      await interaction.editReply("You can only delete messages in guilds.");
+      await interaction.editReply({
+        embeds: [
+          error(null, "You can only delete messages in guilds.", client),
+        ],
+      });
       return;
     }
 
@@ -36,9 +41,15 @@ export const purge: Command = {
     );
 
     if (!guildMember) {
-      await interaction.editReply(
-        "Failed to retrieve your information in this guild."
-      );
+      await interaction.editReply({
+        embeds: [
+          error(
+            null,
+            "Failed to retrieve your information in this guild.",
+            client
+          ),
+        ],
+      });
       return;
     }
 
@@ -51,21 +62,28 @@ export const purge: Command = {
     });
 
     if (!isOfficer) {
-      await interaction.editReply("You are not an officer.");
+      await interaction.editReply({
+        embeds: [error("Permission Error", "You are not an officer.", client)],
+      });
       return;
     }
 
     if (!isInRange(n, 1, 100)) {
-      await interaction.editReply("Must be in range 1-100.");
+      await interaction.editReply({
+        embeds: [error("Out of range", "Must be in range 1-100.", client)],
+      });
       return;
     }
 
+    let returnMessage: MessageEmbed;
     let description = `You have purged up to ${n} messages from this channel.`;
+
+    returnMessage = success(null, description, client);
+
     await channel?.bulkDelete(n, true).catch((err: Error) => {
       description = `An error has occurred.\n${err}`;
+      returnMessage = error(null, description, client);
     });
-
-    const returnMessage = createEmbeded("Purge", description, user, client);
 
     await interaction.editReply({ embeds: [returnMessage] });
     return;
