@@ -107,3 +107,6 @@ dist
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# Intellj files
+.idea/

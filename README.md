@@ -4,7 +4,7 @@
 
 CodeRED is a **24 hours hackathon**, organized by CougarCS, the largest computer science organization at the University of Houston. It's an event for people to come together and innovate by pushing their limits to create something amazing!
 
-This is the offical CodeRED Discord Bot. The bot is built using Typescript and DiscordJS.
+This is the official CodeRED Discord Bot. The bot is built using Typescript and DiscordJS.
 
 <hr/>
 
@@ -19,7 +19,7 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
   - [NodeJS](https://nodejs.org/en/) Version 16+
   - [Yarn](https://yarnpkg.com/)
 - #### Installation
-  1. `Yarn` to install packages
+  1. `yarn` to install packages
   2. Create an `.env` in the root (./) directory
      - You must have a [Discord Developer](https://discord.com/developers) account setup to obtain a bot token.
      - Developer mode must be enabled in your Discord Client to obtain your Guild and Client IDs.
@@ -31,21 +31,21 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
   ```
   3. You're good to go!
 - #### Build Scripts
-  - `Yarn start` : Runs the code normally using ts-node.
-  - `Yarn dev` : Starts the ts-node-dev watcher and recompiles + runs code whenever a change is made.
-  - `Yarn build` : Compiles .TS files to .JS using TSC and puts them in ./dist
-  - `Yarn clean` : Compiles .TS files cleanly and wipes all existing .JS files
+  - `yarn start` : Runs the code normally using ts-node.
+  - `yarn dev` : Starts the ts-node-dev watcher and recompiles + runs code whenever a change is made.
+  - `yarn build` : Compiles .TS files to .JS using TSC and puts them in ./dist
+  - `yarn clean` : Compiles .TS files cleanly and wipes all existing .JS files
 - #### Linting/Styling
   - This repo uses ESLint and Prettier to enforce linting and styling rules.
-  - `Yarn lint` : Checks for any linting issues
-  - `Yarn lint:fix` : Attempts to fix any autofixable linting issues
-  - `Yarn prettier` : Checks for any styling issues
-  - `Yarn prettier:fix` : Attempts to format all code to match style rules
+  - `yarn lint` : Checks for any linting issues
+  - `yarn lint:fix` : Attempts to fix any auto fixable linting issues
+  - `yarn prettier` : Checks for any styling issues
+  - `yarn prettier:fix` : Attempts to format all code to match style rules
   - We suggest using an ESLint and Prettier plugin for your respective editor to aid with development.
 - #### Structure
   - `index.ts` contains handler routing and login
   - `./commands` contains individual commands
-  - `./configs` contains data storage/configuation
+  - `./configs` contains data storage/configuration
   - `./events` contains handlers for different events
   - `./interfaces` contains interfaces
   - `./utils` contains utility files
@@ -54,7 +54,7 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
 
 # Deployment 🚀
 
-- To deploy you'll first need to run `Yarn build` which builds the .JS files in ./dist
+- To deploy you'll first need to run `yarn build` which builds the .JS files in ./dist
 - Secondly you'll need to navigate into `./dist` and run `node index.js`
 
 <hr/>
