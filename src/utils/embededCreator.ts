@@ -195,3 +195,17 @@ export const warn = (
 
   return embeded;
 };
+
+export const image = (client: Client, title: string, image: string) => {
+  const embeded = new EmbedBuilder()
+    .setColor("#ffeded")
+    .setTitle(title)
+    .setTimestamp()
+    .setFooter({
+      text: `${client.user?.tag}`,
+      iconURL: client.user?.displayAvatarURL(),
+    })
+    .setImage(image);
+
+  return embeded;
+};
