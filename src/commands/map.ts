@@ -13,7 +13,7 @@ export const map: Command = {
         .setDescription("Enter either 'venue' or 'exit'")
         .setRequired(true)
     ),
-  run: async (interaction, client) => {
+  execute: async (interaction, client) => {
     await interaction.deferReply();
 
     let file: AttachmentBuilder;

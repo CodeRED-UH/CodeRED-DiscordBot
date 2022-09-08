@@ -6,7 +6,7 @@ export const help: Command = {
   data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Provides information on using this bot."),
-  run: async (interaction, client) => {
+  execute: async (interaction, client) => {
     await interaction.deferReply();
 
     const title = "**Help** ⛑ ";
