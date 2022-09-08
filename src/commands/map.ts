@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { AttachmentBuilder, EmbedBuilder } from "discord.js";
-import { image, error } from "../utils/embededCreator";
+import { MessageEmbed, MessageAttachment } from "discord.js";
 import { Command } from "../interfaces/Command";
 
 export const map: Command = {
@@ -16,27 +15,55 @@ export const map: Command = {
   run: async (interaction, client) => {
     await interaction.deferReply();
 
-    let file: AttachmentBuilder;
-    let mapEmbed: EmbedBuilder;
+    let iconURL: string | null | undefined;
+    if (client.user?.avatarURL({ format: "png" }) === null) {
+      iconURL = "https://avatars.githubusercontent.com/u/107168679?s=200&v=4";
+    } else {
+      iconURL = client.user?.avatarURL({ format: "png" });
+    }
+
+    let file: MessageAttachment;
+    let mapEmbed: MessageEmbed;
 
     switch (interaction.options.getString("map", true)) {
       case "venue": {
-        file = new AttachmentBuilder("src/assets/venue_map.jpg");
-
-        mapEmbed = image(client, "Venue Map", "attachment://venue_map.jpg");
+        file = new MessageAttachment("src/assets/venue_map.jpg");
+        mapEmbed = new MessageEmbed()
+          .setColor("#ffeded")
+          .setTitle("Venue Map")
+          .setTimestamp()
+          .setImage("attachment://venue_map.jpg")
+          .setFooter({
+            text: `${client.user?.tag}`,
+            iconURL: iconURL as string,
+          });
         await interaction.editReply({ embeds: [mapEmbed], files: [file] });
         break;
       }
       case "exit": {
-        file = new AttachmentBuilder("src/assets/exit_map.jpg");
-
-        mapEmbed = image(client, "Exit Map", "attachment://exit_map.jpg");
+        file = new MessageAttachment("src/assets/exit_map.jpg");
+        mapEmbed = new MessageEmbed()
+          .setColor("#ffeded")
+          .setTitle("Venue Map")
+          .setTimestamp()
+          .setImage("attachment://exit_map.jpg")
+          .setFooter({
+            text: `${client.user?.tag}`,
+            iconURL: iconURL as string,
+          });
         await interaction.editReply({ embeds: [mapEmbed], files: [file] });
         break;
       }
       default: {
-        mapEmbed = error(client, "❌ Option not found", "", []);
-
+        mapEmbed = new MessageEmbed()
+          .setColor("#FF0000")
+          .setTitle("❌ Option not found")
+          .setDescription("That option doesn't seem to exist.")
+          .setTimestamp()
+          .setFooter({
+            text: `${client.user?.tag}`,
+            iconURL: iconURL as string,
+          });
         await interaction.editReply({ embeds: [mapEmbed] });
         break;
       }

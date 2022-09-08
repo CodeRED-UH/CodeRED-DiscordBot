@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { MessageEmbed } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { general } from "../utils/embededCreator";
 
 export const help: Command = {
   data: new SlashCommandBuilder()
@@ -9,23 +9,41 @@ export const help: Command = {
   run: async (interaction, client) => {
     await interaction.deferReply();
 
-    const title = "**Help** ⛑ ";
-    const description = `Hi! I'm <@${client.user?.id}>! Here are some of my commands!`;
-    const fields = [
-      {
-        name: "Ping 🏓",
-        value: "To view the current Websocket & Discord API ping use `/ping`.",
-      },
-      {
-        name: "Purge 🗑️",
-        value:
-          "To clear messages use `/purge`\nCommand is only available to officers.",
-      },
-    ];
+    const description = `${client.user?.tag} is CodeRED's official Discord bot!`;
+    let iconURL: string | null | undefined;
 
-    const returnMessage = general(client, title, description, fields);
+    if (
+      client.user?.avatarURL({ format: "png" }) === null ||
+      client.user?.avatarURL({ format: "png" }) === undefined
+    ) {
+      iconURL = "https://avatars.githubusercontent.com/u/107168679?s=200&v=4";
+    } else {
+      iconURL = client.user?.avatarURL({ format: "png" });
+    }
 
-    await interaction.editReply({ embeds: [returnMessage] });
+    const helpEmbed = new MessageEmbed()
+      .setColor("#ffeded")
+      .setTitle("**Help** ⛑")
+      .setDescription(description)
+      .addField(
+        "Ping 🏓",
+        "To view the current Websocket & Discord API ping use `/ping`."
+      )
+      .addField(
+        "Stats 📊",
+        "To view the current statistics of the bot use `/stats`.`\nOnly available to the bot's owner.`"
+      )
+      .addField(
+        "Purge",
+        "To clear messages use `/purge.\nOnly available to officers.`"
+      )
+      .setTimestamp()
+      .setFooter({
+        text: `${client.user?.tag}`,
+        iconURL: iconURL as string,
+      });
+
+    await interaction.editReply({ embeds: [helpEmbed] });
     return;
   },
 };
