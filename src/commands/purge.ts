@@ -22,7 +22,7 @@ export const purge: Command = {
         .setDescription("Enter a number from 1-100.")
         .setRequired(true)
     ),
-  run: async (interaction, client) => {
+  execute: async (interaction, client) => {
     await interaction.deferReply({ ephemeral: true });
     const { user, channel } = interaction;
     const n = interaction.options.getNumber("n", true);
@@ -92,6 +92,7 @@ export const purge: Command = {
     The bultDelete() error below is ignored as channel type is checked above at line 30 to prevent
     bultDelete() from being executed in a DM channel.  
     */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     await channel?.bulkDelete(n, true).catch((err: Error) => {
       description = `An error has occurred.\n${err}`;
