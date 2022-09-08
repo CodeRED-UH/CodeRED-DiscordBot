@@ -3,7 +3,6 @@ import { Client, PresenceStatusData } from "discord.js";
 import { Routes } from "discord-api-types/v10";
 import { CommandList } from "../utils/_Commandlists";
 import config from "../config/config.json";
-import "dotenv/config";
 
 export const onReady = async (client: Client) => {
   const rest = new REST({ version: "10" }).setToken(
