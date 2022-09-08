@@ -12,7 +12,7 @@ export const report: Command = {
         .setDescription("The report that you want to make")
         .setRequired(true)
     ),
-  run: async (interaction, client) => {
+  execute: async (interaction, client) => {
     await interaction.deferReply({ ephemeral: true });
 
     const report = interaction.options.getString("report", true);
