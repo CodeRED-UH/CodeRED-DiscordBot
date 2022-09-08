@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { EmbedBuilder } from "discord.js";
+import { MessageEmbed } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { success, error } from "../utils/embededCreator";
+import { success, error } from "../utils/embeded";
 
 const isInRange = (
   n: number,
@@ -27,21 +27,16 @@ export const purge: Command = {
     const { user, channel } = interaction;
     const n = interaction.options.getNumber("n", true);
 
-    if (channel?.isDMBased()) {
+    if (channel?.type === "DM" || !interaction.guild) {
       await interaction.editReply({
         embeds: [
-          error(
-            client,
-            undefined,
-            "You can only delete messages in guilds.",
-            []
-          ),
+          error(null, "You can only delete messages in guilds.", client),
         ],
       });
       return;
     }
 
-    const guildMember = interaction.guild?.members.cache.find(
+    const guildMember = await interaction.guild.members.cache.find(
       (u) => u.id === user.id
     );
 
@@ -49,10 +44,9 @@ export const purge: Command = {
       await interaction.editReply({
         embeds: [
           error(
-            client,
-            undefined,
+            null,
             "Failed to retrieve your information in this guild.",
-            []
+            client
           ),
         ],
       });
@@ -61,7 +55,7 @@ export const purge: Command = {
 
     let isOfficer = false;
 
-    guildMember.roles.cache.forEach((roleID) => {
+    await guildMember.roles.cache.forEach((roleID) => {
       if (roleID.name === "Officer") {
         isOfficer = true;
       }
@@ -69,33 +63,26 @@ export const purge: Command = {
 
     if (!isOfficer) {
       await interaction.editReply({
-        embeds: [
-          error(client, "Permission Error", "You are not an officer.", []),
-        ],
+        embeds: [error("Permission Error", "You are not an officer.", client)],
       });
       return;
     }
 
     if (!isInRange(n, 1, 100)) {
       await interaction.editReply({
-        embeds: [error(client, "Out of range", "Must be in range 1-100.", [])],
+        embeds: [error("Out of range", "Must be in range 1-100.", client)],
       });
       return;
     }
 
-    let returnMessage: EmbedBuilder;
-    let description = `You have purged ${n} messages from this channel.`;
+    let returnMessage: MessageEmbed;
+    let description = `You have purged up to ${n} messages from this channel.`;
 
-    returnMessage = success(client, undefined, description, []);
+    returnMessage = success(null, description, client);
 
-    /*
-    The bultDelete() error below is ignored as channel type is checked above at line 30 to prevent
-    bultDelete() from being executed in a DM channel.  
-    */
-    // @ts-ignore
     await channel?.bulkDelete(n, true).catch((err: Error) => {
       description = `An error has occurred.\n${err}`;
-      returnMessage = error(client, undefined, description, []);
+      returnMessage = error(null, description, client);
     });
 
     await interaction.editReply({ embeds: [returnMessage] });
