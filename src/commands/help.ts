@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Command } from "../interfaces/Command";
-import { general } from "../utils/embededCreator";
+import { createGeneral } from "../utils/embededCreator";
 
 export const help: Command = {
   data: new SlashCommandBuilder()
@@ -23,7 +23,7 @@ export const help: Command = {
       },
     ];
 
-    const returnMessage = general(client, title, description, fields);
+    const returnMessage = createGeneral(client, title, description, fields);
 
     await interaction.editReply({ embeds: [returnMessage] });
     return;

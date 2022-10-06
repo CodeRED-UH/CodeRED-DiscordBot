@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Command } from "../interfaces/Command";
-import { success } from "../utils/embededCreator";
+import { createSuccess } from "../utils/embededCreator";
 
 export const report: Command = {
   data: new SlashCommandBuilder()
@@ -19,7 +19,12 @@ export const report: Command = {
 
     const description = `Your report with the contents\n"${report}"\nhas been successfully submitted`;
 
-    const returnMessage = success(client, "**Report 📞**", description, []);
+    const returnMessage = createSuccess(
+      client,
+      "**Report 📞**",
+      description,
+      []
+    );
 
     await interaction.editReply({ embeds: [returnMessage] });
     return;

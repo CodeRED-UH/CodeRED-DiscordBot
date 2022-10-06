@@ -1,7 +1,7 @@
 import { Client, EmbedBuilder } from "discord.js";
 import { EmbededField } from "../interfaces/Embeded";
 
-export const general = (
+export const createGeneral = (
   client: Client,
   title: string,
   description: string,
@@ -31,7 +31,7 @@ export const general = (
   return embeded;
 };
 
-export const success = (
+export const createSuccess = (
   client: Client,
   title: string | undefined,
   description: string,
@@ -86,7 +86,7 @@ export const success = (
   return embeded;
 };
 
-export const error = (
+export const createError = (
   client: Client,
   title: string | undefined,
   description: string,
@@ -141,7 +141,7 @@ export const error = (
   return embeded;
 };
 
-export const warn = (
+export const createWarn = (
   client: Client,
   title: string | undefined,
   description: string,
@@ -196,7 +196,7 @@ export const warn = (
   return embeded;
 };
 
-export const image = (client: Client, title: string, image: string) => {
+export const createImage = (client: Client, title: string, image: string) => {
   const embeded = new EmbedBuilder()
     .setColor("#ffeded")
     .setTitle(title)

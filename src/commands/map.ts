@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { AttachmentBuilder, EmbedBuilder } from "discord.js";
-import { image, error } from "../utils/embededCreator";
+import { createImage, createError } from "../utils/embededCreator";
 import { Command } from "../interfaces/Command";
 
 export const map: Command = {
@@ -23,19 +23,23 @@ export const map: Command = {
       case "venue": {
         file = new AttachmentBuilder("src/assets/venue_map.jpg");
 
-        mapEmbed = image(client, "Venue Map", "attachment://venue_map.jpg");
+        mapEmbed = createImage(
+          client,
+          "Venue Map",
+          "attachment://venue_map.jpg"
+        );
         await interaction.editReply({ embeds: [mapEmbed], files: [file] });
         break;
       }
       case "exit": {
         file = new AttachmentBuilder("src/assets/exit_map.jpg");
 
-        mapEmbed = image(client, "Exit Map", "attachment://exit_map.jpg");
+        mapEmbed = createImage(client, "Exit Map", "attachment://exit_map.jpg");
         await interaction.editReply({ embeds: [mapEmbed], files: [file] });
         break;
       }
       default: {
-        mapEmbed = error(client, "❌ Option not found", "", []);
+        mapEmbed = createError(client, "❌ Option not found", "", []);
 
         await interaction.editReply({ embeds: [mapEmbed] });
         break;
