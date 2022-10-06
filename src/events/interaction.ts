@@ -4,7 +4,7 @@ import {
   BaseInteraction,
 } from "discord.js";
 import { CommandList } from "../utils/_Commandlists";
-import { error } from "../utils/embededCreator";
+import { createError } from "../utils/embededCreator";
 
 export const onInteraction = async (
   interaction: BaseInteraction,
@@ -20,7 +20,7 @@ export const onInteraction = async (
           );
           break;
         } catch (err) {
-          const errorMessage = error(
+          const errorMessage = createError(
             client,
             undefined,
             "An error occured while attempting to run the command.",
