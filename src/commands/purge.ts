@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { success, error } from "../utils/embededCreator";
+import { createSuccess, createError } from "../utils/embededCreator";
 
 const isInRange = (
   n: number,
@@ -30,7 +30,7 @@ export const purge: Command = {
     if (channel?.isDMBased()) {
       await interaction.editReply({
         embeds: [
-          error(
+          createError(
             client,
             undefined,
             "You can only delete messages in guilds.",
@@ -48,7 +48,7 @@ export const purge: Command = {
     if (!guildMember) {
       await interaction.editReply({
         embeds: [
-          error(
+          createError(
             client,
             undefined,
             "Failed to retrieve your information in this guild.",
@@ -70,7 +70,12 @@ export const purge: Command = {
     if (!isOfficer) {
       await interaction.editReply({
         embeds: [
-          error(client, "Permission Error", "You are not an officer.", []),
+          createError(
+            client,
+            "Permission Error",
+            "You are not an officer.",
+            []
+          ),
         ],
       });
       return;
@@ -78,7 +83,9 @@ export const purge: Command = {
 
     if (!isInRange(n, 1, 100)) {
       await interaction.editReply({
-        embeds: [error(client, "Out of range", "Must be in range 1-100.", [])],
+        embeds: [
+          createError(client, "Out of range", "Must be in range 1-100.", []),
+        ],
       });
       return;
     }
@@ -86,7 +93,7 @@ export const purge: Command = {
     let returnMessage: EmbedBuilder;
     let description = `You have purged ${n} messages from this channel.`;
 
-    returnMessage = success(client, undefined, description, []);
+    returnMessage = createSuccess(client, undefined, description, []);
 
     /*
     The bultDelete() error below is ignored as channel type is checked above at line 30 to prevent
@@ -96,7 +103,7 @@ export const purge: Command = {
     // @ts-ignore
     await channel?.bulkDelete(n, true).catch((err: Error) => {
       description = `An error has occurred.\n${err}`;
-      returnMessage = error(client, undefined, description, []);
+      returnMessage = createError(client, undefined, description, []);
     });
 
     await interaction.editReply({ embeds: [returnMessage] });
