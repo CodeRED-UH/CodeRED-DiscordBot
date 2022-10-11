@@ -1,7 +1,22 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { AttachmentBuilder, EmbedBuilder } from "discord.js";
+import { AttachmentBuilder, Client, EmbedBuilder } from "discord.js";
 import { createImage, createError } from "../utils/embedCreator";
 import { Command } from "../interfaces/Command";
+
+interface option {
+  attachment: AttachmentBuilder;
+  imageEmbed: EmbedBuilder;
+}
+
+const createOption = (file: string, client: Client, title: string): option => {
+  const attachment = new AttachmentBuilder(`src/assets/${file}`);
+  const imageEmbed = createImage(client, title, `attachment://${file}`);
+
+  return {
+    attachment: attachment,
+    imageEmbed: imageEmbed,
+  };
+};
 
 export const map: Command = {
   data: new SlashCommandBuilder()
@@ -16,25 +31,36 @@ export const map: Command = {
   execute: async (interaction, client) => {
     await interaction.deferReply();
 
-    let file: AttachmentBuilder;
-    let mapEmbed: EmbedBuilder;
-
     const option = interaction.options.getString("map", true);
 
     if (option === "venue") {
-      file = new AttachmentBuilder("src/assets/venue_map.jpg");
+      const data = createOption("venue_map.jpg", client, "Venue Map");
 
-      mapEmbed = createImage(client, "Venue Map", "attachment://venue_map.jpg");
-      await interaction.editReply({ embeds: [mapEmbed], files: [file] });
+      await interaction.editReply({
+        embeds: [data.imageEmbed],
+        files: [data.attachment],
+      });
+
+      return;
     } else if (option === "exit") {
-      file = new AttachmentBuilder("src/assets/exit_map.jpg");
+      const data = createOption("exit_map.jpg", client, "Exit Map");
 
-      mapEmbed = createImage(client, "Exit Map", "attachment://exit_map.jpg");
-      await interaction.editReply({ embeds: [mapEmbed], files: [file] });
-    } else {
-      mapEmbed = createError(client, "❌ Option not found", "", []);
+      await interaction.editReply({
+        embeds: [data.imageEmbed],
+        files: [data.attachment],
+      });
 
-      await interaction.editReply({ embeds: [mapEmbed] });
+      return;
     }
+
+    const errorEmbed = createError(
+      client,
+      undefined,
+      "You've selected an invalid option.",
+      []
+    );
+
+    await interaction.editReply({ embeds: [errorEmbed] });
+    return;
   },
 };
