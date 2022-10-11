@@ -1,13 +1,13 @@
 import { Client, EmbedBuilder } from "discord.js";
-import { EmbededField } from "../interfaces/Embeded";
+import { embedField } from "src/interfaces/Embed";
 
 export const createGeneral = (
   client: Client,
   title: string,
   description: string,
-  fields: EmbededField[]
+  fields: embedField[]
 ) => {
-  const embeded = new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor("#ffeded")
     .setTitle(title)
     .setDescription(description)
@@ -19,7 +19,7 @@ export const createGeneral = (
 
   if (fields.length !== 0) {
     fields.map((data) => {
-      embeded.addFields([
+      embed.addFields([
         {
           name: data.name,
           value: data.value,
@@ -28,17 +28,17 @@ export const createGeneral = (
     });
   }
 
-  return embeded;
+  return embed;
 };
 
 export const createSuccess = (
   client: Client,
   title: string | undefined,
   description: string,
-  fields: EmbededField[]
+  fields: embedField[]
 ) => {
   if (title) {
-    const embeded = new EmbedBuilder()
+    const embed = new EmbedBuilder()
       .setColor("#4BB543")
       .setTitle(`✅ ${title}`)
       .setDescription(description)
@@ -50,7 +50,7 @@ export const createSuccess = (
 
     if (fields.length !== 0) {
       fields.map((data) => {
-        embeded.addFields([
+        embed.addFields([
           {
             name: data.name,
             value: data.value,
@@ -59,10 +59,10 @@ export const createSuccess = (
       });
     }
 
-    return embeded;
+    return embed;
   }
 
-  const embeded = new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor("#4BB543")
     .setTitle(`✅ Success!`)
     .setDescription(description)
@@ -74,7 +74,7 @@ export const createSuccess = (
 
   if (fields.length !== 0) {
     fields.map((data) => {
-      embeded.addFields([
+      embed.addFields([
         {
           name: data.name,
           value: data.value,
@@ -83,17 +83,17 @@ export const createSuccess = (
     });
   }
 
-  return embeded;
+  return embed;
 };
 
 export const createError = (
   client: Client,
   title: string | undefined,
   description: string,
-  fields: EmbededField[]
+  fields: embedField[]
 ) => {
   if (title) {
-    const embeded = new EmbedBuilder()
+    const embed = new EmbedBuilder()
       .setColor("#FF0000")
       .setTitle(`❌ ${title}`)
       .setDescription(description)
@@ -105,7 +105,7 @@ export const createError = (
 
     if (fields.length !== 0) {
       fields.map((data) => {
-        embeded.addFields([
+        embed.addFields([
           {
             name: data.name,
             value: data.value,
@@ -114,10 +114,10 @@ export const createError = (
       });
     }
 
-    return embeded;
+    return embed;
   }
 
-  const embeded = new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor("#FF0000")
     .setTitle("❌ There seems to have been an error.")
     .setDescription(description)
@@ -129,7 +129,7 @@ export const createError = (
 
   if (fields.length !== 0) {
     fields.map((data) => {
-      embeded.addFields([
+      embed.addFields([
         {
           name: data.name,
           value: data.value,
@@ -138,17 +138,17 @@ export const createError = (
     });
   }
 
-  return embeded;
+  return embed;
 };
 
 export const createWarn = (
   client: Client,
   title: string | undefined,
   description: string,
-  fields: EmbededField[]
+  fields: embedField[]
 ) => {
   if (title) {
-    const embeded = new EmbedBuilder()
+    const embed = new EmbedBuilder()
       .setColor("#eed202")
       .setTitle(`⚠️ ${title}`)
       .setDescription(description)
@@ -160,7 +160,7 @@ export const createWarn = (
 
     if (fields.length !== 0) {
       fields.map((data) => {
-        embeded.addFields([
+        embed.addFields([
           {
             name: data.name,
             value: data.value,
@@ -169,10 +169,10 @@ export const createWarn = (
       });
     }
 
-    return embeded;
+    return embed;
   }
 
-  const embeded = new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor("#eed202")
     .setTitle("⚠️ Warning")
     .setDescription(description)
@@ -184,7 +184,7 @@ export const createWarn = (
 
   if (fields.length !== 0) {
     fields.map((data) => {
-      embeded.addFields([
+      embed.addFields([
         {
           name: data.name,
           value: data.value,
@@ -193,11 +193,11 @@ export const createWarn = (
     });
   }
 
-  return embeded;
+  return embed;
 };
 
 export const createImage = (client: Client, title: string, image: string) => {
-  const embeded = new EmbedBuilder()
+  const embed = new EmbedBuilder()
     .setColor("#ffeded")
     .setTitle(title)
     .setTimestamp()
@@ -207,5 +207,5 @@ export const createImage = (client: Client, title: string, image: string) => {
     })
     .setImage(image);
 
-  return embeded;
+  return embed;
 };

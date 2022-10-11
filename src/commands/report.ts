@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Command } from "../interfaces/Command";
-import { createSuccess } from "../utils/embededCreator";
+import { createSuccess } from "../utils/embedCreator";
 
 export const report: Command = {
   data: new SlashCommandBuilder()

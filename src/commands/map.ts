@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { AttachmentBuilder, EmbedBuilder } from "discord.js";
-import { createImage, createError } from "../utils/embededCreator";
+import { createImage, createError } from "../utils/embedCreator";
 import { Command } from "../interfaces/Command";
 
 export const map: Command = {

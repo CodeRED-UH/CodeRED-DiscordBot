@@ -1,4 +1,4 @@
-export interface EmbededField {
+export interface embedField {
   name: string;
   value: string;
 }
