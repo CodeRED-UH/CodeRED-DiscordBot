@@ -19,31 +19,22 @@ export const map: Command = {
     let file: AttachmentBuilder;
     let mapEmbed: EmbedBuilder;
 
-    switch (interaction.options.getString("map", true)) {
-      case "venue": {
-        file = new AttachmentBuilder("src/assets/venue_map.jpg");
+    const option = interaction.options.getString("map", true);
 
-        mapEmbed = createImage(
-          client,
-          "Venue Map",
-          "attachment://venue_map.jpg"
-        );
-        await interaction.editReply({ embeds: [mapEmbed], files: [file] });
-        break;
-      }
-      case "exit": {
-        file = new AttachmentBuilder("src/assets/exit_map.jpg");
+    if (option === "venue") {
+      file = new AttachmentBuilder("src/assets/venue_map.jpg");
 
-        mapEmbed = createImage(client, "Exit Map", "attachment://exit_map.jpg");
-        await interaction.editReply({ embeds: [mapEmbed], files: [file] });
-        break;
-      }
-      default: {
-        mapEmbed = createError(client, "❌ Option not found", "", []);
+      mapEmbed = createImage(client, "Venue Map", "attachment://venue_map.jpg");
+      await interaction.editReply({ embeds: [mapEmbed], files: [file] });
+    } else if (option === "exit") {
+      file = new AttachmentBuilder("src/assets/exit_map.jpg");
 
-        await interaction.editReply({ embeds: [mapEmbed] });
-        break;
-      }
+      mapEmbed = createImage(client, "Exit Map", "attachment://exit_map.jpg");
+      await interaction.editReply({ embeds: [mapEmbed], files: [file] });
+    } else {
+      mapEmbed = createError(client, "❌ Option not found", "", []);
+
+      await interaction.editReply({ embeds: [mapEmbed] });
     }
   },
 };
