@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { EmbedBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { createSuccess, createError } from "../utils/embededCreator";
+import { createSuccess, createError } from "../utils/embedCreator";
 
 const isInRange = (
   n: number,

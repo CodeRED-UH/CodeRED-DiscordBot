@@ -4,7 +4,7 @@ import {
   BaseInteraction,
 } from "discord.js";
 import { CommandList } from "../utils/_Commandlists";
-import { createError } from "../utils/embededCreator";
+import { createError } from "../utils/embedCreator";
 
 export const onInteraction = async (
   interaction: BaseInteraction,

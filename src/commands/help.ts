@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Command } from "../interfaces/Command";
-import { createGeneral } from "../utils/embededCreator";
+import { createGeneral } from "../utils/embedCreator";
 
 export const help: Command = {
   data: new SlashCommandBuilder()
