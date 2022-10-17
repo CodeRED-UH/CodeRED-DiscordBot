@@ -8,6 +8,11 @@ This is the offical CodeRED Discord Bot. The bot is built using Typescript and D
 
 <hr/>
 
+![CircleCI](https://img.shields.io/circleci/build/github/CodeRED-UH/CodeRED-DiscordBot?style=flat-square)
+[![GitHub issues](https://img.shields.io/github/issues/CodeRED-UH/CodeRED-DiscordBot?style=flat-square)](https://github.com/CodeRED-UH/CodeRED-DiscordBot/issues)
+![GitHub last commit](https://img.shields.io/github/last-commit/CodeRED-UH/CodeRED-DiscordBot?style=flat-square)
+![GitHub package.json dependency version (prod)](https://img.shields.io/github/package-json/dependency-version/CodeRED-UH/CodeRED-DiscordBot/discord.js?style=flat-square)
+
 # Development 🔨
 
 - #### Requirements
