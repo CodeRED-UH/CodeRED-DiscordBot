@@ -7,9 +7,9 @@ import { roulette } from "../commands/roulette";
 import { createteam } from "../commands/createteam";
 import { leaveteam } from "../commands/leaveteam";
 import { invite } from "../commands/invite";
-import { purge } from "../commands/purge";
 import { promote } from "../commands/promote";
 import { verify } from "../commands/verify";
+import { botmessage } from "../commands/botmessage";
 
 export const CommandList: Command[] = [
   help,
@@ -20,7 +20,7 @@ export const CommandList: Command[] = [
   createteam,
   leaveteam,
   invite,
-  purge,
   promote,
   verify,
+  botmessage,
 ];

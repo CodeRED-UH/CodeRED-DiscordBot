@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
+import { SlashCommandBuilder } from "discord.js/node_modules/@discordjs/builders";
 import { Command } from "../interfaces/Command";
 
 export const roulette: Command = {

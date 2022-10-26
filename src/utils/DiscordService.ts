@@ -20,6 +20,7 @@ class DiscordService {
     "everyone",
     "verified ✅",
     "here",
+    "Admin",
   ];
 
   static ephemeral = true;
@@ -108,7 +109,11 @@ class DiscordService {
   ): Promise<TextChannel | undefined> => {
     const guild = team.guild;
     const channels = await guild.channels.fetch();
-    const targetChannel = channels.find((channel) => channel.name === "unused");
+    if (!channels) return;
+    const targetChannel = channels.find((channel) => {
+      if (!channel) return false;
+      return channel.name === "unused";
+    });
     if (!targetChannel) {
       console.log(
         `Error in "createTeamChannel": The "unused" channel is not found.`
@@ -145,7 +150,11 @@ class DiscordService {
   ): Promise<TextChannel | undefined> => {
     const guild = team.guild;
     const channels = await guild.channels.fetch();
-    const targetChannel = channels.find((channel) => channel.name === "unused");
+    const targetChannel = channels.find((channel) => {
+      if (!channel) return false;
+      return channel.name === "unused";
+    });
+
     if (!targetChannel) {
       console.log(
         `Error in "getTeamChannel": The "unused" channel is not found.`

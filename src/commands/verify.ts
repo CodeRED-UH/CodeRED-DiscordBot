@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
+import { SlashCommandBuilder } from "discord.js/node_modules/@discordjs/builders";
 import GoogleService from "../utils/GoogleService";
 import { Command } from "../interfaces/Command";
 import DiscordService from "../utils/DiscordService";
