@@ -1,110 +1,123 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { Command } from "../interfaces/Command";
 import { createEmbeded } from "../utils/embeded";
-import { google } from "googleapis";
-import { time } from "console";
+import GoogleService from "../utils/GoogleService";
 
 export const checkout: Command = {
-    data: new SlashCommandBuilder()
-        .setName("checkout")
-        .setDescription("Check's you out of the CodeRED Event.")
-        .addStringOption((option) =>
-            option
-                .setName("email")
-                .setDescription("The email you entered when signing up")
-                .setRequired(true)
-        ),
-    run: async (interaction, client) => {
-        await interaction.deferReply({ ephemeral: false });
-        const { user } = interaction;
-        const email = interaction.options.getString("email", true);
-        var verif = false;
+  data: new SlashCommandBuilder()
+    .setName("checkout")
+    .setDescription("Check's you out of the CodeRED Odyssey!")
+    .addStringOption((option) =>
+      option
+        .setName("email")
+        .setDescription("The email you entered when signing up")
+        .setRequired(true)
+    ),
+  run: async (interaction, client) => {
+    await interaction.deferReply({ ephemeral: true });
+    const { user } = interaction;
+    const email = interaction.options.getString("email", true);
 
-        // Start of googleapis stuff
-        ; (async () => {
-            const auth = new google.auth.JWT({
-                email: "client_id",
-                key: "private_key",
-                scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-            })
-            const sheet = google.sheets("v4")
-            const sheetdata = await sheet.spreadsheets.values.get({
-                spreadsheetId: "1jT_gUsH6_E6FYK03Apb57vpBbVgiBW0tMSCmjLsGxxs",
-                auth: auth,
-                range: "Sheet1!A1:D"
-            })
-            // console.log(user.tag);
-            // console.log(sheetdata.data.values?.length);
-            let rownum: number | undefined;
-            rownum = sheetdata.data.values?.length;
-            if (rownum != undefined) {
-                for (var i = 0; i < rownum; i++) {
-                    const cellDisc = sheetdata.data.values?.at(i)?.at(0);
-                    if (cellDisc == user.tag) {
-                        const cellEmail = sheetdata.data.values?.at(i)?.at(1);
-                        if (cellEmail == email) {
-                            verif = true;
-                            console.log(sheetdata.data.values?.at(i)?.at(2));
-                            if (sheetdata.data.values?.at(i)?.at(2) == "Checked In ✅") {
-                                let dateTime = new Date();
-                                await sheet.spreadsheets.values.update({
-                                    spreadsheetId: "1jT_gUsH6_E6FYK03Apb57vpBbVgiBW0tMSCmjLsGxxs",
-                                    auth: auth,
-                                    range: "Sheet1!C" + (i + 1).toString(),
-                                    valueInputOption: "RAW",
-                                    requestBody: {
-                                        values: [["Checked Out 🚗", dateTime.toLocaleTimeString() + " " + dateTime.toLocaleDateString()]]
-                                    }
-                                })
+    const emailRange = "B1:B";
+    const rowIndexArray = await GoogleService.linearSearch(email, emailRange);
 
-                                const checkedoutMessage = createEmbeded(
-                                    "**CHECK-OUT SUCCESSFUL!** 👋",
-                                    `You've checked out with ***${email}***.\nThank you for being a part of CodeRED Odyssey!`,
-                                    user,
-                                    client
-                                ).setColor(0x00FF00);
+    let message = createEmbeded(
+      "**CHECK-OUT SUCCESSFUL!** 👋",
+      `You've checked out with ***${email}***.\nThank you for being a part of CodeRED Odyssey!`,
+      user,
+      client
+    )
+      .setColor(0x00ff00)
+      .setFooter(null)
+      .setTimestamp(null);
 
-                                console.log("SUCCESS - CHECKOUT");
-                                await interaction.editReply({ embeds: [checkedoutMessage] });
-                                let guild = await interaction.guild;
-                                if (interaction.member != undefined) {
-                                    let member = guild?.members.cache.get(interaction.member.user.id);
-                                    let role = guild?.roles.cache.find(r => r.name == "Participant")
-                                    if (!role) {
-                                        console.log("Role Error");
-                                    } else {
-                                        member?.roles.remove(role);
-                                    }
-                                }
-                                break;
-                            }
-                            console.log("USELESS - CHECKOUT");
+    const failMessage = createEmbeded(
+      "**CHECK-OUT FAILED!** ❌",
+      `The email ***${email}*** does not match our records.\nPlease make sure to enter the email you signed up with.`,
+      user,
+      client
+    )
+      .setColor(0xff0000)
+      .setFooter(null)
+      .setTimestamp(null);
 
-                            const notcheckedinMessage = createEmbeded(
-                                "**CHECK-OUT CANCELED!** ❌",
-                                `You're not currently checked in with ***${email}***.\nPlease check into the event before checking out.`,
-                                user,
-                                client
-                            ).setColor(0xFF8000);
-                            await interaction.editReply({ embeds: [notcheckedinMessage] });
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!verif) {
-                const failMessage = createEmbeded(
-                    "**CHECK-OUT FAILED!** ❌",
-                    `The email ***${email}*** does not match our records.\nPlease make sure to enter the email you signed up with.`,
-                    user,
-                    client
-                ).setColor(0xFF0000);
-                await interaction.editReply({ embeds: [failMessage] });
-                console.log("FAILURE - CHECKOUT");
-            }
-        })()
-        // end of googleapis stuff
+    if (rowIndexArray.length == 0) {
+      console.log("FAILURE - EMAIL NOT FOUND");
+      await interaction.editReply({ embeds: [failMessage] });
+      return;
+    }
 
-        return;
-    },
+    if (rowIndexArray.length === 1 && rowIndexArray[0] === -1) {
+      console.log("FAILURE - UNKNOWN SPREADSHEET ERROR");
+      await interaction.editReply({ embeds: [failMessage] });
+      return;
+    }
+
+    let rowIndex = -1;
+    for (let i = 0; i < rowIndexArray.length; i++) {
+      const ri = rowIndexArray[i];
+      const discordCell = (
+        await GoogleService.getData("A" + ri.toString())
+      ).data.values
+        .at(0)
+        .at(0);
+      if (discordCell === user.tag) {
+        rowIndex = ri;
+        break;
+      }
+    }
+
+    if (rowIndex === -1) {
+      console.log("FAILURE - NO MATCH");
+      await interaction.editReply({ embeds: [failMessage] });
+      return;
+    }
+
+    const statusCell = await GoogleService.getData("C" + rowIndex.toString());
+    if (statusCell.data.values.at(0).at(0) !== "Checked In ✅") {
+      console.log("USELESS - NOT CHECKED IN");
+      message = createEmbeded(
+        "**CHECK-OUT CANCELED!** ❌",
+        `You're not currently checked in with ***${email}***.\nPlease check into the event before checking out.`,
+        user,
+        client
+      )
+        .setColor(0xff8000)
+        .setFooter(null)
+        .setTimestamp(null);
+      await interaction.editReply({ embeds: [message] });
+      return;
+    }
+
+    await GoogleService.updateCell("C" + rowIndex.toString(), "Checked Out 🚗");
+    await GoogleService.updateCell(
+      "E" + rowIndex.toString(),
+      new Date().toLocaleTimeString() + " " + new Date().toLocaleDateString()
+    );
+
+    if (interaction.member === null) {
+      console.log("FAILURE - MEMBER ERROR");
+      await interaction.editReply({ embeds: [failMessage] });
+      return;
+    }
+
+    const member = interaction.guild?.members.cache.get(
+      interaction.member?.user.id
+    );
+    const participantRole = interaction.guild?.roles.cache.find(
+      (r) => r.name === "Hacker"
+    );
+    const teamlessRole = interaction.guild?.roles.cache.find(
+      (r) => r.name === "Teamless"
+    );
+
+    if (!participantRole) console.log("ROLE ERROR - NOT FOUND");
+    else member?.roles.remove(participantRole);
+    if (!teamlessRole) console.log("ROLE ERROR - NOT FOUND");
+    else member?.roles.remove(teamlessRole);
+
+    console.log("SUCCESS - CHECKOUT");
+    await interaction.editReply({ embeds: [message] });
+    return;
+  },
 };
