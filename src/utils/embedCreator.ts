@@ -11,11 +11,9 @@ export const createGeneral = (
     .setColor("#ffeded")
     .setTitle(title)
     .setDescription(description)
-    .setTimestamp()
-    .setFooter({
-      text: `${client.user?.tag}`,
-      iconURL: client.user?.displayAvatarURL(),
-    });
+    .setTimestamp(null)
+    .setFooter(null)
+    .setColor(0xff0000);
 
   if (fields.length !== 0) {
     fields.map((data) => {
@@ -42,11 +40,8 @@ export const createSuccess = (
       .setColor("#4BB543")
       .setTitle(`✅ ${title}`)
       .setDescription(description)
-      .setTimestamp()
-      .setFooter({
-        text: `${client.user?.tag}`,
-        iconURL: client.user?.displayAvatarURL(),
-      });
+      .setTimestamp(null)
+      .setFooter(null);
 
     if (fields.length !== 0) {
       fields.map((data) => {
@@ -66,11 +61,8 @@ export const createSuccess = (
     .setColor("#4BB543")
     .setTitle(`✅ Success!`)
     .setDescription(description)
-    .setTimestamp()
-    .setFooter({
-      text: `${client.user?.tag}`,
-      iconURL: client.user?.displayAvatarURL(),
-    });
+    .setTimestamp(null)
+    .setFooter(null);
 
   if (fields.length !== 0) {
     fields.map((data) => {
@@ -200,12 +192,10 @@ export const createImage = (client: Client, title: string, image: string) => {
   const embed = new EmbedBuilder()
     .setColor("#ffeded")
     .setTitle(title)
-    .setTimestamp()
-    .setFooter({
-      text: `${client.user?.tag}`,
-      iconURL: client.user?.displayAvatarURL(),
-    })
-    .setImage(image);
+    .setTimestamp(null)
+    .setFooter(null)
+    .setImage(image)
+    .setColor(0x00ff00);
 
   return embed;
 };
