@@ -33,6 +33,27 @@ class GoogleService {
     return indexArray;
   }
 
+  static async binarySearch(key: string, range: string): Promise<number[]> {
+    const sheetdata = await this.getData(range);
+    if (sheetdata.data.values === undefined) return [-1];
+    const rownum = sheetdata.data.values.length;
+    let l = 0;
+    let r = rownum - 1;
+
+    while (l <= r) {
+      const m = Math.floor((l + r) / 2);
+      const midCell = sheetdata.data.values.at(m).at(0) as string;
+      if (key.toLowerCase() < midCell.toLowerCase()) {
+        r = m - 1;
+      } else if (key.toLowerCase() > midCell.toLowerCase()) {
+        l = m + 1;
+      } else {
+        return [m + 1];
+      }
+    }
+    return [];
+  }
+
   static async updateRange(range: string, values: string[][]) {
     const sheet = google.sheets("v4");
     sheet.spreadsheets.values.update({

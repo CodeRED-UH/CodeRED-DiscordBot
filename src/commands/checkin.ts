@@ -59,7 +59,7 @@ export const checkin: Command = {
     const email = interaction.options.getString("email", true);
 
     const emailRange = "B1:B";
-    const rowIndexArray = await GoogleService.linearSearch(email, emailRange);
+    const rowIndexArray = await GoogleService.binarySearch(email, emailRange);
 
     if (rowIndexArray.length == 0) {
       console.log("FAILURE - EMAIL NOT FOUND");

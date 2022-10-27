@@ -29,7 +29,7 @@ export const verify: Command = {
     }
 
     const emailRange = "B1:B";
-    const rowIndexArray = await GoogleService.linearSearch(email, emailRange);
+    const rowIndexArray = await GoogleService.binarySearch(email, emailRange);
     if (rowIndexArray.length == 0) {
       await interaction.reply(DiscordService.notVerifiedMessage(email));
       return;
