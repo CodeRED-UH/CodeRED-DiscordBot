@@ -62,7 +62,7 @@ export const purge: Command = {
     let isOfficer = false;
 
     guildMember.roles.cache.forEach((roleID) => {
-      if (roleID.name === "Officer") {
+      if (roleID.name === "Admin") {
         isOfficer = true;
       }
     });

@@ -7,7 +7,13 @@ import "dotenv/config";
 
 (async () => {
   if (!validateEnv()) return;
-  const client = new Client({ intents: IntentOptions });
+  const client = new Client({
+    intents: IntentOptions,
+    allowedMentions: {
+      parse: ["roles", "users", "everyone"],
+      repliedUser: true,
+    },
+  });
 
   client.on("ready", async () => await onReady(client));
 
