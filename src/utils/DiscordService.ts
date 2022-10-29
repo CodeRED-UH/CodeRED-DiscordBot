@@ -419,6 +419,7 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Invite to ${invitedMember} has expired.`,
+      ephemeral: this.ephemeral,
     };
   };
 
