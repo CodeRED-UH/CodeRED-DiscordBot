@@ -12,6 +12,7 @@ import {
   SelectMenuBuilder,
   TextInputModalData,
 } from "discord.js";
+import DiscordService from "../utils/DiscordService";
 
 const failMessage = (email: string, user: User, client: Client<boolean>) => {
   return createGeneral(
@@ -56,20 +57,24 @@ export const checkin: Command = {
   execute: async (interaction, client) => {
     await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
+
+    const { guild } = interaction;
+    if (!guild) return;
+    await DiscordService.log(`${user.tag} used /checkin`, guild);
     const email = interaction.options.getString("email", true);
 
     const emailRange = "B1:B";
     const rowIndexArray = await GoogleService.binarySearch(email, emailRange);
 
     if (rowIndexArray.length == 0) {
-      console.log("FAILURE - EMAIL NOT FOUND");
+      await DiscordService.log("FAILURE - EMAIL NOT FOUND", guild);
       await interaction.editReply({
         embeds: [failMessage(email, user, client)],
       });
       return;
     }
     if (rowIndexArray.length === 1 && rowIndexArray[0] === -1) {
-      console.log("FAILURE - UNKNOWN SPREADSHEET ERROR");
+      await DiscordService.log("FAILURE - UNKNOWN SPREADSHEET ERROR", guild);
       await interaction.editReply({
         embeds: [failMessage(email, user, client)],
       });
@@ -90,7 +95,7 @@ export const checkin: Command = {
     }
 
     if (rowIndex === -1) {
-      console.log("FAILURE - NO MATCH");
+      await DiscordService.log("FAILURE - NO MATCH", guild);
       await interaction.editReply({
         embeds: [failMessage(email, user, client)],
       });
@@ -99,7 +104,7 @@ export const checkin: Command = {
 
     const statusCell = await GoogleService.getData("C" + rowIndex.toString());
     if (statusCell.data.values?.at(0).at(0) === "Checked In ✅") {
-      console.log("USELESS - CHECKED IN");
+      await DiscordService.log("USELESS - CHECKED IN", guild);
       const timestamp = await GoogleService.getData("D" + rowIndex.toString());
       await interaction.editReply({
         embeds: [
@@ -204,7 +209,7 @@ export const checkin: Command = {
         ];
         await GoogleService.updateRange(range, values);
         if (modalSubmitInteraction.member === null) {
-          console.log("FAILURE - MEMBER ERROR");
+          await DiscordService.log("FAILURE - MEMBER ERROR", guild);
           await modalSubmitInteraction.editReply({
             embeds: [failMessage(email, user, client)],
           });
@@ -250,7 +255,7 @@ export const checkin: Command = {
               ])
           );
 
-        console.log("SUCCESS - CHECKIN");
+        await DiscordService.log("SUCCESS - CHECKIN", guild);
         await modalSubmitInteraction.editReply({
           embeds: [message],
           components: [dropdown],

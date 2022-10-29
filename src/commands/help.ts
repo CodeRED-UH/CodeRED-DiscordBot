@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import DiscordService from "../utils/DiscordService";
 import { Command } from "../interfaces/Command";
 import { createGeneral } from "../utils/embedCreator";
 
@@ -8,6 +9,11 @@ export const help: Command = {
     .setDescription("Provides information on using this bot."),
   execute: async (interaction, client) => {
     await interaction.deferReply({ ephemeral: true });
+    const { user } = interaction;
+
+    const { guild } = interaction;
+    if (!guild) return;
+    await DiscordService.log(`${user.tag} used /help`, guild);
 
     const title = "**Help** ⛑ ";
     const description = `Hi! I'm <@${client.user?.id}>! Here are some of my commands!\n`;

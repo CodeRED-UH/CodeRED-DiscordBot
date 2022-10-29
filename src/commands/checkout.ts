@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import DiscordService from "../utils/DiscordService";
 import { Command } from "../interfaces/Command";
 import { createGeneral } from "../utils/embedCreator";
 import GoogleService from "../utils/GoogleService";
@@ -16,6 +17,11 @@ export const checkout: Command = {
   execute: async (interaction, client) => {
     await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
+
+    const { guild } = interaction;
+    if (!guild) return;
+
+    await DiscordService.log(`${user.tag} used /checkout`, guild);
     const email = interaction.options.getString("email", true);
 
     const emailRange = "B1:B";
@@ -42,13 +48,13 @@ export const checkout: Command = {
       .setTimestamp(null);
 
     if (rowIndexArray.length == 0) {
-      console.log("FAILURE - EMAIL NOT FOUND");
+      await DiscordService.log("FAILURE - EMAIL NOT FOUND", guild);
       await interaction.editReply({ embeds: [failMessage] });
       return;
     }
 
     if (rowIndexArray.length === 1 && rowIndexArray[0] === -1) {
-      console.log("FAILURE - UNKNOWN SPREADSHEET ERROR");
+      await DiscordService.log("FAILURE - UNKNOWN SPREADSHEET ERROR", guild);
       await interaction.editReply({ embeds: [failMessage] });
       return;
     }
@@ -68,14 +74,14 @@ export const checkout: Command = {
     }
 
     if (rowIndex === -1) {
-      console.log("FAILURE - NO MATCH");
+      await DiscordService.log("FAILURE - NO MATCH", guild);
       await interaction.editReply({ embeds: [failMessage] });
       return;
     }
 
     const statusCell = await GoogleService.getData("C" + rowIndex.toString());
     if (statusCell.data.values.at(0).at(0) !== "Checked In ✅") {
-      console.log("USELESS - NOT CHECKED IN");
+      await DiscordService.log("USELESS - NOT CHECKED IN", guild);
       message = createGeneral(
         client,
         "**CHECK-OUT CANCELED!** ❌",
@@ -96,7 +102,7 @@ export const checkout: Command = {
     );
 
     if (interaction.member === null) {
-      console.log("FAILURE - MEMBER ERROR");
+      await DiscordService.log("FAILURE - MEMBER ERROR", guild);
       await interaction.editReply({ embeds: [failMessage] });
       return;
     }
@@ -111,12 +117,14 @@ export const checkout: Command = {
       (r) => r.name === "Teamless"
     );
 
-    if (!participantRole) console.log("ROLE ERROR - NOT FOUND");
+    if (!participantRole)
+      await DiscordService.log("ROLE ERROR - NOT FOUND", guild);
     else member?.roles.remove(participantRole);
-    if (!teamlessRole) console.log("ROLE ERROR - NOT FOUND");
+    if (!teamlessRole)
+      await DiscordService.log("ROLE ERROR - NOT FOUND", guild);
     else member?.roles.remove(teamlessRole);
 
-    console.log("SUCCESS - CHECKOUT");
+    await DiscordService.log("SUCCESS - CHECKOUT", guild);
     await interaction.editReply({ embeds: [message] });
     return;
   },

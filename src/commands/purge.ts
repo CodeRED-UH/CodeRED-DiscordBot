@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { EmbedBuilder } from "discord.js";
+import DiscordService from "../utils/DiscordService";
 import { Command } from "../interfaces/Command";
 import { createSuccess, createError } from "../utils/embedCreator";
 
@@ -25,6 +26,11 @@ export const purge: Command = {
   execute: async (interaction, client) => {
     await interaction.deferReply({ ephemeral: true });
     const { user, channel } = interaction;
+
+    const { guild } = interaction;
+    if (!guild) return;
+    await DiscordService.log(`${user.tag} used /purge`, guild);
+
     const n = interaction.options.getNumber("n", true);
 
     if (channel?.isDMBased()) {

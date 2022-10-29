@@ -7,22 +7,23 @@ export const teams: Command = {
     .setName("teams")
     .setDescription("View the teams currently set up for CodeRED Odyssey!"),
   execute: async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
+    const { user } = interaction;
     const { guild } = interaction;
     if (!guild) return;
+    await DiscordService.log(`${user.tag} used /teams`, guild);
     const teams = await DiscordService.getTeams(guild);
     if (!teams) {
-      interaction.reply({
+      interaction.editReply({
         content: `There are no teams currently set up!`,
-        ephemeral: true,
       });
       return;
     }
     let teamMessage = `Teams:`;
     teams.forEach((team) => (teamMessage += `\n - ${team}`));
     teamMessage += `\nTotal: **${teams.size}**`;
-    interaction.reply({
+    interaction.editReply({
       content: teamMessage,
-      ephemeral: true,
     });
   },
 };

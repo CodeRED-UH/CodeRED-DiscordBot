@@ -14,9 +14,11 @@ export const verify: Command = {
         .setRequired(true)
     ),
   execute: async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
     const guild = interaction.guild;
     if (!guild) return;
+    await DiscordService.log(`${user.tag} used /verify`, guild);
 
     const email = interaction.options.getString("email", true);
 
@@ -24,14 +26,19 @@ export const verify: Command = {
     if (!member) return;
 
     if (await DiscordService.verified(member)) {
-      await interaction.reply(DiscordService.verifiedMessage());
+      await DiscordService.log(` - ${user.tag} has been verified!`, guild);
+      await interaction.editReply(DiscordService.verifiedMessage());
       return;
     }
 
     const emailRange = "B1:B";
     const rowIndexArray = await GoogleService.binarySearch(email, emailRange);
     if (rowIndexArray.length == 0) {
-      await interaction.reply(DiscordService.notVerifiedMessage(email));
+      await DiscordService.log(
+        ` - ${user.tag} has NOT been verified! Reason: email doesn't exist. Email: ${email}`,
+        guild
+      );
+      await interaction.editReply(DiscordService.notVerifiedMessage(email));
       return;
     }
 
@@ -50,9 +57,15 @@ export const verify: Command = {
     }
 
     if (rowIndex === -1) {
-      await interaction.reply(DiscordService.notVerifiedMessage(email));
+      await DiscordService.log(
+        ` - ${user.tag} has NOT been verified! Reason: email doesn't match Discord tag. Email: ${email}`,
+        guild
+      );
+      await interaction.editReply(DiscordService.notVerifiedMessage(email));
       return;
     }
+
+    await interaction.editReply(DiscordService.verifiedMessage());
 
     const guildRoles = await DiscordService.getGuildRoles(guild);
     if (!guildRoles) return;
@@ -63,10 +76,10 @@ export const verify: Command = {
     if (!verifiedRole) return;
     await member.roles.add(verifiedRole);
 
-    await interaction.reply(DiscordService.verifiedMessage());
-
-    const teamless = await DiscordService.getTeamless(guild);
+    const teamless = DiscordService.getTeamless(guild);
     if (!teamless) return;
     await member.roles.add(teamless);
+
+    await DiscordService.log(` - ${user.tag} has been verified!`, guild);
   },
 };

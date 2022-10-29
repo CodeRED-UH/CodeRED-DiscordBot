@@ -24,6 +24,7 @@ class DiscordService {
     "coderedbot",
     "mentor",
     "volunteer",
+    "autoteam",
   ];
 
   static ephemeral = true;
@@ -186,26 +187,44 @@ class DiscordService {
       channel.permissionsFor(team).has(["ViewChannel"])
     );
     if (!teamChannel) {
-      console.log(
-        `Error in "getTeamChannel": The team channel for ${team.name} is not found.`
-      );
+      // console.log(
+      //   `Error in "getTeamChannel": The team channel for ${team.name} is not found.`
+      // );
       return undefined;
     }
-
     return teamChannel as TextChannel;
   };
 
-  static getTeamless = async (guild: Guild): Promise<Role | undefined> => {
-    return (await guild?.roles.fetch())?.find(
+  static log = async (
+    logBody: string,
+    guild: Guild | null
+  ): Promise<boolean> => {
+    console.log(logBody);
+    if (!guild) return false;
+    const logChannel = guild.channels.cache.find(
+      (channel) => channel.id === "1035400889705451601"
+    ) as TextChannel;
+    if (!logChannel) {
+      console.log("Error: Log Channel could not be found");
+      return false;
+    }
+    await logChannel.send(`\`${new Date().toISOString()}\` **${logBody}**`);
+    return true;
+  };
+
+  static getTeamless = (guild: Guild): Role | undefined => {
+    const teamless = guild.roles.cache.find(
       (r) => r.name.toLowerCase() === "teamless"
     );
+    if (!teamless) return undefined;
+    return teamless as Role;
   };
 
   static addToTeam = async (member: GuildMember, team: Role): Promise<void> => {
     const guild = team.guild;
     await member.roles.add(team);
 
-    const teamless = await this.getTeamless(guild);
+    const teamless = this.getTeamless(guild);
     if (teamless) {
       await member.roles.remove(teamless);
     }
@@ -215,6 +234,27 @@ class DiscordService {
     if (!teamChannel) return;
 
     await teamChannel.send(`${member} has joined ${team}!`);
+  };
+
+  static addManyToTeam = async (
+    members: GuildMember[],
+    team: Role
+  ): Promise<void> => {
+    const guild = team.guild;
+    members.forEach(async (member) => await member.roles.add(team));
+
+    const teamless = this.getTeamless(guild);
+    if (teamless) {
+      members.forEach(async (member) => await member.roles.remove(teamless));
+    }
+
+    const teamChannel =
+      (await this.getTeamChannel(team)) || (await this.createTeamChannel(team));
+    if (!teamChannel) return;
+
+    members.forEach(
+      async (member) => await teamChannel.send(`${member} has joined ${team}!`)
+    );
   };
 
   static leaveTeam = async (member: GuildMember): Promise<string> => {
@@ -248,12 +288,9 @@ class DiscordService {
     return !!roles.find((r) => r.name.toLowerCase() === "verified ✅");
   };
 
-  static alreadyInTeamMessage = (
-    team: Role
-  ): { content: string; ephemeral: boolean } => {
+  static alreadyInTeamMessage = (team: Role): { content: string } => {
     return {
       content: `Sorry, you can only be in 1 team at a time! You're currently in: ${team}.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -263,7 +300,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Sorry, ${member} is already in team ${team}.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -272,7 +308,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `${member} is not in a team.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -282,7 +317,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `${user} is not in ${team}.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -291,7 +325,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Sorry, the team name **${teamName}** is not allowed. Please pick another name!`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -300,7 +333,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Sorry, the team name **${teamName}** is already taken. Please pick another name!`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -310,7 +342,6 @@ class DiscordService {
     const teamChannel = (await this.getTeamChannel(team)) || `#${team.name}`;
     return {
       content: `Congratulations! You have successfully created your new team, ${team}! Chat with your team in ${teamChannel}!`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -320,7 +351,6 @@ class DiscordService {
     | InteractionReplyOptions => {
     return {
       content: `You cannot have a bot on your team. 🤖`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -329,7 +359,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `You cannot send an invite for ${team}.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -338,7 +367,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Your team ${team} has already hit the maximum of 4 people.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -348,7 +376,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Invite for ${user} to join ${team} sent!`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -358,7 +385,6 @@ class DiscordService {
     | InteractionReplyOptions => {
     return {
       content: `You must be in a team to invite somebody!`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -373,7 +399,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Sorry, you cannot leave **${team.name}**.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -382,12 +407,11 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `You have left the team **${teamName}**.`,
-      ephemeral: this.ephemeral,
     };
   };
 
   static inviteMessage = (user: User, team: Role, sender: User): string => {
-    return `Hello ${user}! You have been invited to join the team **${team.name}** from ${sender}! Please react with ✅ in the next minute to accept!`;
+    return `Hello ${user}! You have been invited to join the team **${team.name}** from ${sender}! Please react with ✅ in the next 10 minutes to accept!`;
   };
 
   static sentInviteExpiredMessage = (
@@ -395,7 +419,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `Invite to ${invitedMember} has expired.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -405,7 +428,6 @@ class DiscordService {
     | InteractionReplyOptions => {
     return {
       content: `You are not currently in a team.`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -420,7 +442,6 @@ class DiscordService {
     | InteractionReplyOptions => {
     return {
       content: `✅ You have been verified!`,
-      ephemeral: this.ephemeral,
     };
   };
 
@@ -429,7 +450,6 @@ class DiscordService {
   ): string | MessagePayload | InteractionReplyOptions => {
     return {
       content: `❌ We could not verify you with the email **${email}**.`,
-      ephemeral: this.ephemeral,
     };
   };
 }
