@@ -4,7 +4,8 @@ import {
   BaseInteraction,
 } from "discord.js";
 import { CommandList } from "../utils/_Commandlists";
-import { createError } from "../utils/embedCreator";
+// import { createError } from "../utils/embedCreator";
+import DiscordService from "../utils/DiscordService";
 
 export const onInteraction = async (
   interaction: BaseInteraction,
@@ -20,13 +21,14 @@ export const onInteraction = async (
           );
           break;
         } catch (err) {
-          const errorMessage = createError(
-            client,
-            undefined,
-            "An error occured while attempting to run the command.",
-            []
-          );
-          await interaction.reply({ embeds: [errorMessage], ephemeral: true });
+          // const errorMessage = createError(
+          //   client,
+          //   undefined,
+          //   "An error occured while attempting to run the command.",
+          //   []
+          // );
+          // await interaction.reply({ embeds: [errorMessage], ephemeral: true });
+          await DiscordService.log(`Error in interaction.ts: ${err}`, null);
         }
       }
     }

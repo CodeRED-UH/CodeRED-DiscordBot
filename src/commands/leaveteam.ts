@@ -7,20 +7,23 @@ export const leaveteam: Command = {
     .setName("leaveteam")
     .setDescription("Leave your hackathon team!"),
   execute: async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
+
     const guild = interaction.guild;
     if (!guild) return;
+    await DiscordService.log(`${user.tag} used /leaveteam`, guild);
 
     const member = await DiscordService.getMember(guild, user);
     if (!member) return;
 
     if (!(await DiscordService.getTeam(member))) {
-      await interaction.reply(DiscordService.notInTeamMessage());
+      await interaction.editReply(DiscordService.notInTeamMessage());
       return;
     }
 
     const teamName = await DiscordService.leaveTeam(member);
 
-    await interaction.reply(DiscordService.leaveTeamMessage(teamName));
+    await interaction.editReply(DiscordService.leaveTeamMessage(teamName));
   },
 };

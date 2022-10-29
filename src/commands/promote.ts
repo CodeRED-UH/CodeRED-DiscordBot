@@ -9,10 +9,12 @@ export const promote: Command = {
       "Promote your team to the entire server! This will let anyone join!"
     ),
   execute: async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
 
     const guild = interaction.guild;
     if (!guild) return;
+    await DiscordService.log(`${user.tag} used /promote`, guild);
 
     const member = await DiscordService.getMember(guild, user);
     if (!member) return;
@@ -21,13 +23,13 @@ export const promote: Command = {
 
     // Cancel if user is not in a team
     if (!team) {
-      await interaction.reply(DiscordService.notInTeamMessage());
+      await interaction.editReply(DiscordService.notInTeamMessage());
       return;
     }
 
     // Cancel if team is at max capacity
     if (team.members.size >= 4) {
-      await interaction.reply(DiscordService.teamAtMaxMessage(team));
+      await interaction.editReply(DiscordService.teamAtMaxMessage(team));
       return;
     }
 
@@ -40,9 +42,8 @@ export const promote: Command = {
 
     const collector = promotion.createReactionCollector({ time: 5 * 60000 });
 
-    await interaction.reply({
+    await interaction.editReply({
       content: `Promoted ${team} in ${promotionChannel}!`,
-      ephemeral: true,
     });
 
     collector.on("collect", async (reaction, joiningUser) => {
@@ -52,7 +53,7 @@ export const promote: Command = {
       const currentTeam = await DiscordService.getTeam(joiningMember);
       if (currentTeam)
         return (await user.createDM()).send(
-          DiscordService.alreadyInTeamMessage(currentTeam).content
+          DiscordService.alreadyInTeamMessage(currentTeam)
         );
 
       await DiscordService.addToTeam(joiningMember, team);

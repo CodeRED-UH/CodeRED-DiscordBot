@@ -14,6 +14,9 @@ import { roulette } from "../commands/roulette";
 import { verify } from "../commands/verify";
 import { team } from "../commands/team";
 import { teams } from "../commands/teams";
+import { teamname } from "../commands/teamname";
+import { autoteam } from "../commands/autoteam";
+import { autoteamrole } from "../commands/autoteamrole";
 
 export const CommandList: Command[] = [
   help,
@@ -31,4 +34,7 @@ export const CommandList: Command[] = [
   verify,
   team,
   teams,
+  teamname,
+  autoteam,
+  autoteamrole,
 ];

@@ -19,6 +19,7 @@ export const createteam: Command = {
         .setRequired(false)
     ),
   execute: async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
     const guild = interaction.guild;
     if (!guild) return;
@@ -29,15 +30,21 @@ export const createteam: Command = {
     // Cancel if you already have a team
     const currentTeam = await DiscordService.getTeam(member);
     if (currentTeam != undefined) {
-      await interaction.reply(DiscordService.alreadyInTeamMessage(currentTeam));
+      await interaction.editReply(
+        DiscordService.alreadyInTeamMessage(currentTeam)
+      );
       return;
     }
 
     const teamName = interaction.options.getString("team-name", true);
+    await DiscordService.log(
+      `${user.tag} used /createteam with team-name: "${teamName}"`,
+      guild
+    );
 
     // Cancel if team name is bad
     if (!(await DiscordService.teamNameAllowed(teamName))) {
-      await interaction.reply(DiscordService.badTeamNameMessage(teamName));
+      await interaction.editReply(DiscordService.badTeamNameMessage(teamName));
       return;
     }
 
@@ -46,7 +53,9 @@ export const createteam: Command = {
 
     // Cancel if team name is taken
     if (await DiscordService.teamNameTaken(teamName, currentRoles)) {
-      await interaction.reply(DiscordService.takenTeamNameMessage(teamName));
+      await interaction.editReply(
+        DiscordService.takenTeamNameMessage(teamName)
+      );
       return;
     }
 
@@ -62,6 +71,6 @@ export const createteam: Command = {
 
     // Add to team
     await DiscordService.addToTeam(member, newTeam);
-    await interaction.reply(await DiscordService.newTeamMessage(newTeam));
+    await interaction.editReply(await DiscordService.newTeamMessage(newTeam));
   },
 };

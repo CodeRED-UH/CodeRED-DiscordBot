@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { TextChannel } from "discord.js";
+import DiscordService from "../utils/DiscordService";
 import { Command } from "../interfaces/Command";
 import { createGeneral, createSuccess } from "../utils/embedCreator";
 
@@ -19,6 +20,7 @@ export const report: Command = {
 
     const { guild } = interaction;
     if (!guild) return;
+    await DiscordService.log(`${user.tag} used /report`, guild);
 
     const report = interaction.options.getString("report", true);
 

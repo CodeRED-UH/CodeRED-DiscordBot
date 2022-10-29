@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import DiscordService from "../utils/DiscordService";
 import { Command } from "../interfaces/Command";
 
 export const roulette: Command = {
@@ -6,24 +7,28 @@ export const roulette: Command = {
     .setName("roulette")
     .setDescription("Find a random member looking for a team!"),
   execute: async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
 
     const guild = interaction.guild;
-    await guild?.members.fetch();
-    const teamlessPeople = await guild?.roles.cache.find(
+    if (!guild) return;
+    await DiscordService.log(`${user.tag} used /roulette`, guild);
+
+    await guild.members.fetch();
+    const teamlessPeople = guild?.roles.cache.find(
       (r) => r.name === "Teamless"
     )?.members;
 
     teamlessPeople?.delete(user.id);
 
     if (teamlessPeople?.size === 0) {
-      await interaction.reply(
+      await interaction.editReply(
         `Nobody else is looking for a team right now. Come back later!`
       );
       return;
     }
 
-    await interaction.reply(
+    await interaction.editReply(
       `${
         interaction.user
       }, you have been randomly matched with ${teamlessPeople?.at(

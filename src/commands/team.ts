@@ -20,9 +20,11 @@ export const team: Command = {
         .setRequired(false)
     ),
   execute: async (interaction) => {
+    await interaction.deferReply({ ephemeral: true });
     const { user } = interaction;
     const { guild } = interaction;
     if (!guild) return;
+    await DiscordService.log(`${user.tag} used /team`, guild);
 
     const member = await DiscordService.getMember(guild, user);
     if (!member) return;
@@ -34,14 +36,14 @@ export const team: Command = {
       (await DiscordService.getTeam(member));
     if (!team) {
       if (!viewUser) {
-        await interaction.reply(DiscordService.notInTeamMessage());
+        await interaction.editReply(DiscordService.notInTeamMessage());
         return;
       }
       const viewMember = await DiscordService.getMember(guild, viewUser);
       if (!viewMember) return;
       const userTeam = await DiscordService.getTeam(viewMember);
       if (!userTeam) {
-        await interaction.reply(
+        await interaction.editReply(
           DiscordService.otherNotInTeamMessage(viewMember)
         );
         return;
@@ -49,15 +51,14 @@ export const team: Command = {
       let teamInfo = `Team Name: ${userTeam}\n\nMembers:`;
       const members = (userTeam as Role).members;
       members.forEach((member) => (teamInfo += `\n - ${member}`));
-      await interaction.reply({
+      await interaction.editReply({
         content: teamInfo,
-        ephemeral: true,
       });
       return;
     }
 
     if (!(await DiscordService.teamNameAllowed(team.name))) {
-      await interaction.reply(DiscordService.badTeamNameMessage(team.name));
+      await interaction.editReply(DiscordService.badTeamNameMessage(team.name));
       return;
     }
 
@@ -66,13 +67,13 @@ export const team: Command = {
       if (!viewMember) return;
       const userTeam = await DiscordService.getTeam(viewMember);
       if (!userTeam) {
-        await interaction.reply(
+        await interaction.editReply(
           DiscordService.userNotInThisTeamMessage(viewUser, team as Role)
         );
         return;
       }
       if (team !== userTeam) {
-        await interaction.reply(
+        await interaction.editReply(
           DiscordService.userNotInThisTeamMessage(viewUser, team as Role)
         );
         return;
@@ -82,9 +83,8 @@ export const team: Command = {
     let teamInfo = `Team Name: ${team}\n\nMembers:`;
     const members = (team as Role).members;
     members.forEach((member) => (teamInfo += `\n - ${member}`));
-    await interaction.reply({
+    await interaction.editReply({
       content: teamInfo,
-      ephemeral: true,
     });
   },
 };
